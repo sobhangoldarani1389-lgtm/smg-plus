@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SMG Overlay</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}
+body{display:flex;align-items:center;justify-content:center}
+#viewport{position:relative;width:100vw;height:100vh;overflow:hidden;background:transparent}
+#scene{position:absolute;left:50%;top:50%;transform-origin:center center;background:transparent;overflow:hidden}
+.item{position:absolute;overflow:hidden;transform-origin:0 0;background:transparent}
+.item iframe{position:absolute;left:0;top:0;border:0;display:block;transform-origin:0 0;background:transparent}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="scene"></div></div>
+<script>
+const id=location.pathname.split('/').filter(Boolean).pop();
+const scene=document.getElementById('scene');
+const viewport=document.getElementById('viewport');
+let data=null;
+function place(){
+  if(!data)return;
+  const sx=innerWidth/data.width, sy=innerHeight/data.height;
+  const scale=Math.min(sx,sy);
+  scene.style.width=data.width+'px';scene.style.height=data.height+'px';
+  scene.style.transform=`translate(-50%,-50%) scale(${scale})`;
+}
+function render(){
+  scene.innerHTML='';
+  for(const i of [...data.items].sort((a,b)=>a.z-b.z)){
+    const el=document.createElement('div');el.className='item';
+    el.style.left=i.x+'px';el.style.top=i.y+'px';el.style.width=i.w+'px';el.style.height=i.h+'px';el.style.zIndex=String(i.z);
+    const frame=document.createElement('iframe');frame.src=i.url;frame.title=i.name;frame.loading='eager';frame.allow='autoplay';
+    frame.style.width=i.virtualWidth+'px';frame.style.height=i.virtualHeight+'px';
+    const sx=i.w/i.virtualWidth,sy=i.h/i.virtualHeight;
+    if(i.objectFit==='contain'){
+      const sc=Math.min(sx,sy);frame.style.transform=`scale(${sc})`;
+      frame.style.left=((i.w-i.virtualWidth*sc)/2)+'px';frame.style.top=((i.h-i.virtualHeight*sc)/2)+'px';
+    }else{
+      frame.style.transform=`scale(${sx},${sy})`;
+    }
+    el.appendChild(frame);scene.appendChild(el);
+  }
+  place();
+}
+async function load(){
+  const r=await fetch('/api/scenes/'+id,{cache:'no-store'});if(!r.ok)throw new Error('Scene not found');
+  data=await r.json();render();
+}
+addEventListener('resize',place);
+load().catch(e=>{console.error(e);});
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>استودیو اورلی SMG</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="logo">SMG</div><div><b>استودیو اورلی SMG</b><small>یک آدرس برای تمام امکانات OBS</small></div></div>
+    <div class="top-actions">
+      <button id="newBtn" class="ghost">صحنه جدید</button>
+      <button id="scenesBtn" class="ghost">صحنه‌های ذخیره‌شده</button>
+      <button id="saveBtn" class="primary">ذخیره صحنه</button>
+      <button id="urlBtn" class="accent">دریافت آدرس OBS</button>
+    </div>
+  </header>
+  <div class="workspace">
+    <aside class="sidebar right-panel">
+      <div class="panel-title"><span>امکانات</span><button id="addBtn" class="add" title="افزودن امکان">＋</button></div>
+      <div class="hint">هر آدرس یک امکان است. برای قرار دادن آن روی صحنه، روی نامش بزنید.</div>
+      <div id="itemsList" class="items-list"></div>
+      <div class="panel-section">
+        <div class="section-title">تنظیمات صحنه</div>
+        <label>نام صحنه<input id="sceneName" value="صحنه جدید"></label>
+        <div class="two"><label>عرض<input id="sceneW" type="number" min="320" value="1920"></label><label>ارتفاع<input id="sceneH" type="number" min="180" value="1080"></label></div>
+        <div class="preset-row"><button data-size="1920x1080">افقی ۱۶:۹</button><button data-size="1080x1920">عمودی ۹:۱۶</button><button data-size="1280x720">۷۲۰p</button><button data-size="1080x1080">مربع ۱:۱</button></div>
+        <div class="checks"><label><input id="gridToggle" type="checkbox" checked> شبکه</label><label><input id="snapToggle" type="checkbox"> چسبش به شبکه</label></div>
+      </div>
+      <div class="panel-section shortcuts"><div class="section-title">راهنمای سریع</div><div>Delete = حذف از صحنه</div><div>فلش‌ها = حرکت ۱ پیکسل</div><div>Shift + فلش = حرکت ۱۰ پیکسل</div><div>Esc = لغو انتخاب</div></div>
+    </aside>
+    <main class="main">
+      <div class="toolbar">
+        <div class="tool-group"><button id="fitBtn">جای‌گیری خودکار</button><button id="zoomOut">−</button><span id="zoomLabel">100%</span><button id="zoomIn">＋</button></div>
+        <div class="tool-group"><button id="frontBtn">آوردن جلو</button><button id="backBtn">فرستادن عقب</button><button id="duplicateBtn">کپی</button></div>
+        <div class="status" id="status">آماده</div>
+      </div>
+      <div id="stageViewport" class="stage-viewport">
+        <div id="stageWrap" class="stage-wrap">
+          <div id="canvas" class="canvas"><div id="empty" class="empty">برای شروع، از بخش امکانات یک مورد اضافه کنید.</div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<div id="modal" class="modal hidden"><div class="modal-card"><div class="modal-head"><b id="modalTitle">افزودن امکان</b><button id="closeModal">×</button></div><label>نام امکان<input id="mName" placeholder="مثلاً هدف دونیت"></label><label>آدرس URL<input id="mUrl" dir="ltr" placeholder="https://..."></label><div class="two"><label>عرض مجازی<input id="mVW" type="number" value="1920" min="1"></label><label>ارتفاع مجازی<input id="mVH" type="number" value="1080" min="1"></label></div><label>روش نمایش<select id="mFit"><option value="fill">کشیدن کامل در قاب</option><option value="contain">حفظ نسبت تصویر</option></select></label><div class="modal-actions"><button id="cancelModal" class="ghost">لغو</button><button id="saveModal" class="primary">ذخیره</button></div></div></div>
+<div id="urlModal" class="modal hidden"><div class="modal-card"><div class="modal-head"><b>آدرس واحد OBS</b><button id="closeUrl">×</button></div><p>این آدرس، تمام امکانات این صحنه را یک‌جا نمایش می‌دهد.</p><input id="obsUrl" dir="ltr" readonly><button id="copyUrl" class="primary wide">کپی آدرس</button><div class="obs-size"><b>اندازه پیشنهادی Browser Source</b><span id="obsSizeHint"></span></div><small>در OBS فقط یک Browser Source بسازید و این آدرس را وارد کنید.</small></div></div>
+
+<div id="scenesModal" class="modal hidden"><div class="modal-card scenes-card"><div class="modal-head"><b>صحنه‌های ذخیره‌شده</b><button id="closeScenes">×</button></div><p>هر صحنه‌ای که ذخیره می‌کنی اینجا می‌ماند و هر زمان خواستی می‌توانی دوباره بازش کنی.</p><div id="scenesList" class="scenes-list"></div><div class="modal-actions"><button id="refreshScenes" class="ghost">↻ تازه‌سازی فهرست</button><button id="newFromScenes" class="primary">＋ صحنه جدید</button></div></div></div>
+<script src="app.js"></script>
+</body></html>
